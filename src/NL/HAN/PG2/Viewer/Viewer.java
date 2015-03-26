@@ -1,6 +1,9 @@
 package NL.HAN.PG2.Viewer;
 
-import NL.HAN.PG2.SubFrame.SubFrame;
+import NL.HAN.PG2.SubFrame.DNAFrame;
+import NL.HAN.PG2.SubFrame.AminoFrame;
+import NL.HAN.PG2.SubFrame.FeatureFrame;
+import NL.HAN.PG2.Help.HelpFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,28 +22,27 @@ import java.io.IOException;
 public class Viewer extends JFrame implements ActionListener {
 
     JDesktopPane desktop;
+    HelpFrame helpframe;
+    DNAFrame dnaframe;
+    AminoFrame aminoframe;
+    FeatureFrame featureframe;
+    JTextArea aminotext;
 
     public Viewer(){
         super("Annotation Viewer");
         int inset = 0;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(inset, inset,
-                screenSize.width - inset * 2,
-                screenSize.height - inset * 2);
-        int framewidth = screenSize.width - inset * 2;
-        int frameheight = screenSize.height/3;
-        System.out.println(frameheight);
+        setBounds(inset,inset,screenSize.width - inset * 2,screenSize.height - inset * 2);
         desktop = new JDesktopPane();
-        createFrame("Polynucleotide",0,0,framewidth,frameheight);
-        createFrame("Amino acids",0,frameheight,framewidth,frameheight);
-        createFrame("Features",0,frameheight*2,framewidth,frameheight);
+        createDNAFrame();
+        createAminoFrame();
+        createFeatureFrame();
         setContentPane(desktop);
         setJMenuBar(createMenuBar());
-
         desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
     }
 
-    protected JMenuBar createMenuBar() {
+    private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu file = new JMenu("File");
@@ -93,6 +95,28 @@ public class Viewer extends JFrame implements ActionListener {
         menuItem.addActionListener(this);
         create.add(menuItem);
 
+        JMenu view = new JMenu("View");
+//        view.setMnemonic(KeyEvent.VK_H);
+        menuBar.add(view);
+
+        menuItem = new JMenuItem("View DNA Window");
+//        menuItem.setMnemonic(KeyEvent.VK_H);
+        menuItem.setActionCommand("viewDNA");
+        menuItem.addActionListener(this);
+        view.add(menuItem);        
+        
+        menuItem = new JMenuItem("View Amino Acids Window");
+//        menuItem.setMnemonic(KeyEvent.VK_H);
+        menuItem.setActionCommand("viewAmino");
+        menuItem.addActionListener(this);
+        view.add(menuItem);        
+
+        menuItem = new JMenuItem("View Feature/Info Window");
+//        menuItem.setMnemonic(KeyEvent.VK_H);
+        menuItem.setActionCommand("viewFeature");
+        menuItem.addActionListener(this);
+        view.add(menuItem);        
+
         JMenu help = new JMenu("Help");
         help.setMnemonic(KeyEvent.VK_H);
         menuBar.add(help);
@@ -112,14 +136,16 @@ public class Viewer extends JFrame implements ActionListener {
         return menuBar;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
         switch (action) {
             case "new": {
-                createFrame("Something",0,0,0,0);
+                //createFrame("Something",0,0,0,0);
                 break;
             }
             case "help": {
+                showHelp();
                 break;
             }
             case "openfile": {
@@ -130,29 +156,87 @@ public class Viewer extends JFrame implements ActionListener {
                 showAbout();
                 break;
             }
+            case "viewDNA": {
+                createDNAFrame();
+                break;
+            }
+            case "viewAmino": {
+                createAminoFrame();
+                break;
+            }
+            case "viewFeature": {
+                createFeatureFrame();
+                break;
+            }
             default: {
-                quit();
                 break;
             }
         }
     }
 
-    private void createFrame(String header, int xpos, int ypos, int framewidth, int frameheight) {
-        SubFrame frame = new SubFrame(header);
-        frame.setVisible(true);
-        desktop.add(frame);
-        try {
-            frame.setSelected(true);
-            frame.setBounds(xpos, ypos, framewidth, frameheight);
-        } catch (java.beans.PropertyVetoException e) {}
+    private void createDNAFrame() {
+        if (!(dnaframe == null || dnaframe.isClosed())) {
+            return;
+        }
+        dnaframe = null;
+        dnaframe = new DNAFrame("");
+        dnaframe.setVisible(true);
+        desktop.add(dnaframe);
     }
+    
+    private void createAminoFrame() {
+        if (!(aminoframe == null || aminoframe.isClosed())) {
+            return;
+        }
+        aminoframe = null;
+        aminoframe = new AminoFrame("");
+        aminoframe.setVisible(true);
+        desktop.add(aminoframe);
+    }
+    
+    private void createFeatureFrame() {
+        if (!(featureframe == null || featureframe.isClosed())) {
+            return;
+        }
+        featureframe = null;
+        featureframe = new FeatureFrame("");
+        featureframe.setVisible(true);
+        desktop.add(featureframe);
+    }
+    
+//    private void createFrame(String header, int xpos, int ypos, int framewidth, int frameheight) {
+//        SubFrame frame = new SubFrame(header);
+//        frame.setVisible(true);
+//        desktop.add(frame);
+//        try {
+//            frame.setSelected(true);
+//            frame.setBounds(xpos, ypos, framewidth, frameheight);
+//        } catch (java.beans.PropertyVetoException e) {}
+//    }
 
     protected void quit() {
         System.exit(0);
     }
     
+    protected void showHelp() {
+        if (!(helpframe == null || helpframe.isClosed())) {
+            return;
+        }
+        helpframe = null;
+        helpframe = new HelpFrame("");
+        try {
+            helpframe.setSelected(true);
+        }
+        catch (Exception e) {
+            System.out.println("help kan niet getoond worden.");
+        }
+        desktop.add(helpframe);
+        helpframe.setVisible(true);
+    }
+    
     protected void showAbout() {
-        createFrame("About",200,200,200,200);
+        // ff testen
+        dnaframe.setframeText();
     }
     
     protected void openFile() {

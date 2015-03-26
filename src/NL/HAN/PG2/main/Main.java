@@ -1,6 +1,6 @@
 package NL.HAN.PG2.main;
 
-import NL.HAN.PG2.FileHandeling.FileHandeling;
+//import NL.HAN.PG2.FileHandeling.FileHandeling;
 import NL.HAN.PG2.Viewer.Viewer;
 
 /**
@@ -9,17 +9,13 @@ import NL.HAN.PG2.Viewer.Viewer;
 public class Main {
 
     public static void main(String[] args){
-        /*
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                Viewer temp = new Viewer();
-                temp.createAndShowGUI();
-            }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+//            Viewer temp = new Viewer();
+            Viewer.createAndShowGUI();
         });
-        */
-        FileHandeling test = new FileHandeling();
-        test.setFile("C:\\Users\\Chris Cornelisse\\Documents\\GitHub\\AnnotationViewer\\test\\test.fa");
-        System.out.println(test.getType());
-        test.openFile();
+//        FileHandeling test = new FileHandeling();
+//        test.setFile("C:\\Users\\Chris Cornelisse\\Documents\\GitHub\\AnnotationViewer\\test\\test.fa");
+//        System.out.println(test.getType());
+//        test.openFile();
     }
 }

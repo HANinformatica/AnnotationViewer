@@ -1,4 +1,4 @@
-package NL.HAN.PG2.SubFrame;
+package NL.HAN.PG2.Help;
 
 import javax.swing.JInternalFrame;
 import java.awt.*;
@@ -12,34 +12,26 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 /**
- * Created by christiaan on 11-3-2015.
- * Edit Heleen 26/3/2015
+ * Created by Heleen 26/3/2015
  */
 
-public abstract class SubFrame  extends JInternalFrame implements InternalFrameListener  {
-    static int openFrameCount = 0;
-    static final int yOffset = 0;
-    JTextArea sequence;
+public class HelpFrame extends JInternalFrame implements InternalFrameListener  {
+    JTextArea helptxt;
 
-    protected SubFrame(String header,int fixedpos) {
-        super(header, true, true, true, true);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int scrheight = screenSize.height/3 - 18;
-        int ypos = scrheight*fixedpos + yOffset*fixedpos;
-        setSize(screenSize.width, scrheight);
-        setLocation(0, ypos+yOffset);
-        setBounds(0,ypos+yOffset,screenSize.width,scrheight);
-        openFrameCount++;
-        /* ik weet niet hoe ik deze anders moet zetten dan  */
-        initText(fixedpos);
+    public HelpFrame(String header) {
+        super("Help", true, true, true, true);
+        setSize(400,400);
+        setLocation(40,40);
+        setBounds(100,50,400,400);
+        initText();
         addInternalFrameListener(this);
     }
 
-    private void initText(int fixedpos) {
-        sequence = new JTextArea(3, 30);
-        sequence.setText("blaat frame "+fixedpos);
-        sequence.setEditable(false);
-        JScrollPane textScroller = new JScrollPane(sequence);
+    private void initText() {
+        helptxt = new JTextArea(3, 30);
+        helptxt.setText("Dit is de help tekst");
+        helptxt.setEditable(false);
+        JScrollPane textScroller = new JScrollPane(helptxt);
         textScroller.setPreferredSize(new Dimension(200, 75));
         textScroller.setMinimumSize(new Dimension(10, 10));
         JPanel contentPane = new JPanel();
@@ -50,7 +42,10 @@ public abstract class SubFrame  extends JInternalFrame implements InternalFrameL
         this.setContentPane(contentPane);
     }
     
-    public abstract void setframeText();
+    public void setframeText() {
+        // change the tekst
+        helptxt.setText("nieuwe help tekst");
+    }
     
     @Override
     public void internalFrameClosing(InternalFrameEvent e) {
@@ -60,7 +55,6 @@ public abstract class SubFrame  extends JInternalFrame implements InternalFrameL
     @Override
     public void internalFrameClosed(InternalFrameEvent e) {
         displayMessage("Internal frame closed", e);
-        openFrameCount--;
     }
 
     @Override
@@ -94,5 +88,3 @@ public abstract class SubFrame  extends JInternalFrame implements InternalFrameL
     }
     
 }
-
-
